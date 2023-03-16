@@ -16,7 +16,8 @@
         "http://localhost:3000",
         "https://*.appspot.com",
         "https://*.hlx.page",
-        "https://*.hlx.live"
+        "https://*.hlx.live",
+        "https://*.vercel.app"
     ],
     "exposedheaders": [
         ""
