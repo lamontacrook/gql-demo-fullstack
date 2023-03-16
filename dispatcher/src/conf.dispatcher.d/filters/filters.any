@@ -11,3 +11,10 @@ $include "./default_filters.any"
 
 # Allow manifest.webmanifest files located in the content
 /0102 { /type "allow" /extension "webmanifest" /path "/content/*/manifest" }
+
+# This rule allows content to be access
+/0103 { /type "allow" /extension '(css|eot|gif|ico|jpeg|jpg|JPG|js|gif|pdf|png|svg|swf|ttf|woff|woff2|html|mp4|mov|m4v|json)' /path "/content/*" }  # disable this rule to allow mapped content only
+
+/0104 { /type "allow" /extension "html" /selectors "content" /path "/content/*" }
+
+/0105 { /type "allow" /extension "html" /selectors "plain" /path "/content/*" }
