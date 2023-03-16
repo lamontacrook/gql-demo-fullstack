@@ -40,7 +40,7 @@ Include conf.d/variables/custom.vars
 		# https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
 		RewriteEngine On
 		RewriteCond %{REQUEST_METHOD} OPTIONS
-		RewriteRule ^(.*)$ $1 [R=204,L]
+		RewriteRule ^(.*)$ $1 [R=203,L]
 
 	</IfModule>
 	<Directory />
