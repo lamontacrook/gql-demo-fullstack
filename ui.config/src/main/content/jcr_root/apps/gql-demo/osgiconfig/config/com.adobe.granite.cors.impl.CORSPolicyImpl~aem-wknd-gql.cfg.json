@@ -31,7 +31,7 @@
         "Content-Type",
         "Access-Control-Request-Method",
         "Access-Control-Request-Headers",
-        "authorization"
+        "Authorization"
     ],
     "supportedmethods": [
         "GET",
