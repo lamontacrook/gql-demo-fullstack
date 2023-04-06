@@ -29,7 +29,7 @@ Include conf.d/variables/custom.vars
 		# If Origins are dynamic, for example generated subdomains, the Origin check can be replaced w/ a regex check, for example:
 		# <If "%{HTTP:Origin} =~ /^https?:\x2F\x2F((app\.example\.com)|(.*\.?vercel.app)|(localhost:?\d+))$/">...</If>
 						
-		<If "%{HTTP:Origin} in {  'https://app.example.com', 'http://localhost:3001' }">
+		<If "%{HTTP:Origin} in {  'https://aem-pure-headless.vercel.app', 'http://localhost:3000', 'https://lamontacrook.github.io' }">
 			# Vary cache records by Origin, since each Origin has its own Access-Control-Allow-Origin header
 
 			# Set Access-Control-Allow-Origin to the Origin value as it has passed the trusted Origin check above
