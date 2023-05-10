@@ -22,26 +22,46 @@ Include conf.d/variables/custom.vars
 	# Add header breadcrumbs for help in troubleshooting
 	<IfModule mod_headers.c>
 		Header add X-Vhost "publish"
-
-		# Set CORS headers to allow XHR
-		# Determine if Origin matches the regex
-		SetEnvIf Origin "http(s)?://(.*\.adobeaemcloud\.com|.*\.github\.io|.*\.vercel\.app|localhost:3000)$" AccessControlAllowOrigin=$0
-		# Set Access-Control-Allow-Origin if the Origin is allowd
-		Header merge Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
-
-		#	Header set Access-Control-Allow-Headers "Origin, Authorization, Accept, Content-Type"
-		Header set Access-Control-Allow-Methods "POST, GET, OPTIONS"
-		Header set Access-Control-Max-Age "1801"
-		Header set Access-Control-Expose-Headers "Content-Security-Policy, Location"
+        
+		# Always Vary: Origin to ensure non-CORS requests don't break CDN caching.
 		Header merge Vary Origin
 
+		# If Origins are dynamic, for example generated subdomains, the Origin check can be replaced w/ a regex check, for example:
+		# <If "%{HTTP:Origin} =~ /^https?:\x2F\x2F((app\.example\.com)|(.*\.?vercel.app)|(localhost:?\d+))$/">...</If>
+						
+		<If "%{HTTP:Origin} in {  'https://aem-pure-headless.vercel.app', 'http://localhost:3000', 'https://lamontacrook.github.io', 'http://cssucks.info' }">
+			# Vary cache records by Origin, since each Origin has its own Access-Control-Allow-Origin header
 
-		# Answer pre-flight requests with a 204 No Content
-		# https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
-		RewriteEngine On
-		RewriteCond %{REQUEST_METHOD} OPTIONS
-		RewriteRule ^(.*)$ $1 [R=204,L]
+			# Set Access-Control-Allow-Origin to the Origin value as it has passed the trusted Origin check above
+			Header always set Access-Control-Allow-Origin "expr=%{HTTP:Origin}"
 
+			# CORS Preflight requests
+			<If "%{REQUEST_METHOD} == 'OPTIONS'">
+				# Add the allows methods that actual CORS requests can be, for example:
+				Header always set Access-Control-Allow-Methods "GET, POST" 
+				
+				# Allow the non-safelist headers that can be sent on the Actual request
+				Header always set Access-Control-Allow-Headers "Origin, Authorization, Content-Type"
+		
+				# Set cache of pre-flight request to be 15 mins (900 seconds)
+				Header always set Access-Control-Max-Age "900" 
+				
+				# Return all preflight requests at 204 No Content
+				# Since this is technically a redirect (R=) "Header always set" must be used to persist the header values
+				RewriteEngine On
+				RewriteRule ^(.*)$ $1 [R=204,L]
+			</If>
+
+			# CORS "Actual" requests
+			<If "%{REQUEST_METHOD} in { 'GET', 'POST' }">                
+				# Setting to true allows requests with authentication to access the response body
+				Header set Access-Control-Allow-Credentials "true"
+
+				# Requests without authentication can allow all headers, eg. "*"
+				# Requests with authentication must list exact headers, eg. "X-Vhost, X-My-Data"
+				Header set Access-Control-Expose-Headers "Content-Security-Policy, Location"                 
+			</If>
+		</If>
 	</IfModule>
 	<Directory />
 		<IfModule disp_apache2.c>

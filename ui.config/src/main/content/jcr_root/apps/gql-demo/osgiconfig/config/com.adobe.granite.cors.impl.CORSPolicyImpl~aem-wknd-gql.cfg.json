@@ -8,12 +8,14 @@
         ".*"
     ],
     "alloworigin": [
-        "https://lamontacrook.github.io"
+        "https://lamontacrook.github.io",
+        "https://aem-pure-headless.vercel.app"
     ],
     "alloworiginregexp": [
         "https://*.github.io",
         "http://localhost:.*",
         "http://localhost:3000",
+        "https://localhost:3000",
         "https://*.appspot.com",
         "https://*.hlx.page",
         "https://*.hlx.live",
@@ -30,7 +32,7 @@
         "Content-Type",
         "Access-Control-Request-Method",
         "Access-Control-Request-Headers",
-        "authorization"
+        "Authorization"
     ],
     "supportedmethods": [
         "GET",
