@@ -15,6 +15,7 @@
         "https://*.github.io",
         "http://localhost:.*",
         "http://localhost:3000",
+        "https://localhost:3000",
         "https://*.appspot.com",
         "https://*.hlx.page",
         "https://*.hlx.live",
